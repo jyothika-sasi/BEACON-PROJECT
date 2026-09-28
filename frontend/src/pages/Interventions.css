@@ -1,0 +1,436 @@
+.interventions-page {
+  padding: 32px;
+  min-height: 100%;
+  background: #f5f7fa;
+}
+
+/* Header */
+
+.interventions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 25px;
+}
+
+.interventions-header h1 {
+  margin: 0;
+  color: #172b45;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.interventions-header p {
+  margin: 6px 0 0;
+  color: #75849a;
+  font-size: 14px;
+}
+
+.page-eyebrow {
+  color: #2a9298;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+
+.add-intervention-button {
+  border: none;
+  background: #278f96;
+  color: white;
+  border-radius: 9px;
+  padding: 11px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-intervention-button:hover {
+  background: #207c82;
+}
+
+/* Statistics */
+
+.intervention-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 17px;
+  margin-bottom: 22px;
+}
+
+.intervention-stat-card {
+  background: white;
+  border: 1px solid #e4e9ef;
+  border-radius: 13px;
+  padding: 19px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.intervention-stat-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intervention-stat-icon.total {
+  background: #e5f3f4;
+  color: #278f96;
+}
+
+.intervention-stat-icon.progress {
+  background: #fff4dd;
+  color: #bd851d;
+}
+
+.intervention-stat-icon.scheduled {
+  background: #eaf0fb;
+  color: #5173aa;
+}
+
+.intervention-stat-icon.completed {
+  background: #e6f4ed;
+  color: #3d9b6d;
+}
+
+.intervention-stat-card span {
+  display: block;
+  color: #7d8b9d;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.intervention-stat-card strong {
+  color: #172b45;
+  font-size: 22px;
+}
+
+/* Form */
+
+.intervention-form-card {
+  background: white;
+  border: 1px solid #dce5e9;
+  border-radius: 14px;
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 23px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.form-header h2 {
+  margin: 0;
+  color: #172b45;
+  font-size: 17px;
+}
+
+.form-header p {
+  margin: 4px 0 0;
+  color: #8491a3;
+  font-size: 11px;
+}
+
+.close-form-button {
+  border: none;
+  background: #f4f6f8;
+  color: #718096;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.intervention-form {
+  padding: 22px 23px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #53647a;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid #dce2e8;
+  border-radius: 8px;
+  padding: 10px 11px;
+  color: #43546a;
+  background: white;
+  font-size: 12px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #5daeb2;
+  box-shadow: 0 0 0 3px rgba(42, 146, 152, 0.08);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 3px;
+}
+
+.cancel-button {
+  border: 1px solid #dce2e8;
+  background: white;
+  color: #66768a;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.save-intervention-button {
+  border: none;
+  background: #278f96;
+  color: white;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.save-intervention-button:hover {
+  background: #207c82;
+}
+
+/* Main table */
+
+.interventions-card {
+  background: white;
+  border: 1px solid #e4e9ef;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.interventions-card-header {
+  padding: 21px 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.interventions-card-header h2 {
+  margin: 0;
+  color: #172b45;
+  font-size: 18px;
+}
+
+.interventions-card-header p {
+  margin: 5px 0 0;
+  color: #8491a3;
+  font-size: 11px;
+}
+
+.status-filter {
+  border: 1px solid #dce2e8;
+  border-radius: 8px;
+  padding: 8px 11px;
+  color: #53647a;
+  background: white;
+  font-size: 11px;
+  outline: none;
+}
+
+/* Table */
+
+.interventions-table-wrapper {
+  overflow-x: auto;
+}
+
+.interventions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.interventions-table th {
+  padding: 13px 19px;
+  background: #fafbfc;
+  color: #8491a3;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.interventions-table td {
+  padding: 16px 19px;
+  border-top: 1px solid #edf0f4;
+  vertical-align: middle;
+}
+
+.interventions-table tbody tr:hover {
+  background: #fbfcfd;
+}
+
+/* Student */
+
+.intervention-student {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 170px;
+}
+
+.intervention-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 9px;
+  background: #e5f3f4;
+  color: #278f96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.intervention-student strong {
+  display: block;
+  color: #263a52;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.intervention-student span {
+  display: block;
+  color: #8a96a7;
+  font-size: 9px;
+}
+
+/* Columns */
+
+.intervention-type {
+  color: #53647a;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.intervention-date,
+.faculty-name,
+.follow-up-date {
+  color: #7d8b9d;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Status */
+
+.intervention-status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.intervention-status.in-progress {
+  background: #fff4dd;
+  color: #b77b15;
+}
+
+.intervention-status.completed {
+  background: #e6f4ed;
+  color: #3d9468;
+}
+
+.intervention-status.scheduled {
+  background: #eaf0fb;
+  color: #5272a7;
+}
+
+/* View */
+
+.intervention-view-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #278f96;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.intervention-view-button:hover {
+  color: #1d7075;
+}
+
+/* Responsive */
+
+@media (max-width: 1050px) {
+  .intervention-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .intervention-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .interventions-page {
+    padding: 20px;
+  }
+
+  .interventions-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .intervention-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .intervention-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-full {
+    grid-column: auto;
+  }
+}
