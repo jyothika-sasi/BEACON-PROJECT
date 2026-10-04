@@ -1,153 +1,170 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './Login.css'
 
 function Login() {
   const navigate = useNavigate()
 
-  const handleLogin = (event) => {
-    event.preventDefault()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('Administrator')
+  const [error, setError] = useState('')
+
+const handleLogin = (e) => {
+  e.preventDefault()
+
+  setError('')
+
+  if (!email || !password) {
+    setError('Please enter your email and password.')
+    return
+  }
+
+  const user = {
+    name: email.split('@')[0],
+    email: email,
+    role: role,
+  }
+
+  localStorage.setItem('beaconUser', JSON.stringify(user))
+
+  if (role === 'Administrator') {
+    navigate('/dashboard')
+  } else if (role === 'Faculty Advisor') {
+    navigate('/dashboard')
+  } else if (role === 'Department Coordinator') {
     navigate('/dashboard')
   }
+}
 
   return (
     <div className="login-page">
 
-      <div className="login-left">
+      {/* Left side - College image */}
+      <div className="login-image">
+        <div className="login-image-overlay">
+          <p>COLLEGE OF ENGINEERING CHENGANNUR</p>
 
-        <div className="login-brand">
-          <div className="login-brand-icon">
-            <i className="bi bi-shield-check"></i>
-          </div>
-
-          <div>
-            <h1>Beacon</h1>
-            <span>Student Early Warning System</span>
-          </div>
-        </div>
-
-        <div className="login-message">
-
-          <p className="login-eyebrow">
-            EARLY INTERVENTION • BETTER OUTCOMES
-          </p>
+          <h1>BEACON</h1>
 
           <h2>
-            Identify risk early.
+            AI-Powered Early Warning System
             <br />
-            Support students sooner.
+            for Student Dropout Prediction
           </h2>
-
-          <p>
-            Beacon helps faculty identify students who may be
-            at risk of dropping out and supports timely,
-            data-driven intervention.
-          </p>
-
         </div>
-
-        <div className="login-footer">
-          © 2026 Beacon · Academic Support System
-        </div>
-
       </div>
 
-      <div className="login-right">
+      {/* Right side - Login */}
+      <div className="login-container">
 
-        <div className="login-card">
+        <div className="login-box">
 
-          <div className="login-card-header">
+          <div className="login-heading">
+            <p>WELCOME BACK</p>
 
-            <div className="mobile-login-icon">
-              <i className="bi bi-shield-check"></i>
-            </div>
+            <h1>Login</h1>
 
-            <h2>Welcome back</h2>
-
-            <p>
-              Sign in to access your Beacon dashboard.
-            </p>
-
+            <span>
+              Sign in to access the BEACON system
+            </span>
           </div>
 
           <form onSubmit={handleLogin}>
 
-            <div className="form-group">
+            {/* Email */}
+            <div className="input-group">
+              <label>Email</label>
 
-              <label htmlFor="email">
-                Email address
-              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-              <div className="input-wrapper">
+            {/* Password */}
+            <div className="input-group">
+              <label>Password</label>
 
-                <i className="bi bi-envelope"></i>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                />
+            {/* Role */}
+            <div className="role-section">
+
+              <label>Login as</label>
+
+              <div className="role-options">
+
+                <button
+                  type="button"
+                  className={
+                    role === 'Administrator'
+                      ? 'role-card active'
+                      : 'role-card'
+                  }
+                  onClick={() => setRole('Administrator')}
+                >
+                  <strong>Administrator</strong>
+
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    role === 'Faculty Advisor'
+                      ? 'role-card active'
+                      : 'role-card'
+                  }
+                  onClick={() => setRole('Faculty Advisor')}
+                >
+                  <strong>Faculty Advisor</strong>
+
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    role === 'Department Coordinator'
+                      ? 'role-card active'
+                      : 'role-card'
+                  }
+                  onClick={() =>
+                    setRole('Department Coordinator')
+                  }
+                >
+                  <strong>Department Coordinator</strong>
+
+                </button>
 
               </div>
 
             </div>
 
-            <div className="form-group">
+            {/* Error */}
+            {error && (
+              <p className="login-error">
+                {error}
+              </p>
+            )}
 
-              <label htmlFor="password">
-                Password
-              </label>
-
-              <div className="input-wrapper">
-
-                <i className="bi bi-lock"></i>
-
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                />
-
-              </div>
-
-            </div>
-
-            <div className="login-options">
-
-              <label className="remember-me">
-
-                <input type="checkbox" />
-
-                <span>Remember me</span>
-
-              </label>
-
-              <button
-                type="button"
-                className="forgot-password"
-              >
-                Forgot password?
-              </button>
-
-            </div>
-
+            {/* Login button */}
             <button
               type="submit"
-              className="login-button"
+              className="login-submit"
             >
-              Sign in
-              <i className="bi bi-arrow-right"></i>
+              LOGIN
+              <span>→</span>
             </button>
 
           </form>
-
-          <div className="login-security">
-
-            <i className="bi bi-shield-lock"></i>
-
-            <span>
-              Secure access for authorized faculty and administrators
-            </span>
-
-          </div>
 
         </div>
 

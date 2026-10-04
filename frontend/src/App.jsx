@@ -8,19 +8,28 @@ import {
 import MainLayout from './layouts/MainLayout'
 
 import Login from './pages/Login'
+import Landing from './pages/Landing'
+
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import AddStudent from './pages/AddStudent'
 import StudentDetails from './pages/StudentDetails'
 import Alerts from './pages/Alerts'
-import Interventions from './pages/Interventions'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
+import UserManagement from './pages/UserManagement'
+import RiskAnalysis from './pages/RiskAnalysis'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* Landing Page */}
+        <Route
+          path="/"
+          element={<Landing />}
+        />
 
         {/* Login */}
         <Route
@@ -61,12 +70,6 @@ function App() {
             element={<Alerts />}
           />
 
-          {/* Interventions */}
-          <Route
-            path="/interventions"
-            element={<Interventions />}
-          />
-
           {/* Reports */}
           <Route
             path="/reports"
@@ -78,26 +81,22 @@ function App() {
             path="/settings"
             element={<Settings />}
           />
-
+          <Route
+             path="/users"
+             element={<UserManagement />}
+          />
+          <Route
+            path="/risk-analysis"
+            element={<RiskAnalysis />}
+          />
         </Route>
-
-        {/* Default route */}
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to="/login"
-              replace
-            />
-          }
-        />
 
         {/* Unknown route */}
         <Route
           path="*"
           element={
             <Navigate
-              to="/dashboard"
+              to="/"
               replace
             />
           }

@@ -13,6 +13,7 @@ function AddStudent() {
     department: '',
     semester: '',
     batch: '',
+    className: '',
     cgpa: '',
     attendance: '',
     backlogs: '',
@@ -84,6 +85,8 @@ function AddStudent() {
       !formData.id ||
       !formData.department ||
       !formData.semester ||
+      !formData.batch ||
+      !formData.className ||
       !formData.cgpa ||
       !formData.attendance
     ) {
@@ -114,6 +117,7 @@ function AddStudent() {
       department: formData.department,
       semester: formData.semester,
       batch: formData.batch,
+      className: formData.className,
       cgpa: Number(formData.cgpa),
       attendance: Number(formData.attendance),
       backlogs: Number(formData.backlogs || 0),
@@ -138,6 +142,7 @@ function AddStudent() {
     <div className="page-container">
 
       <div className="page-header">
+
         <div>
           <p className="page-eyebrow">
             STUDENT MANAGEMENT
@@ -158,19 +163,25 @@ function AddStudent() {
           <i className="bi bi-arrow-left"></i>
           Back to Students
         </button>
+
       </div>
+
 
       <form
         className="add-student-card"
         onSubmit={handleSubmit}
       >
 
+        {/* Personal Information */}
+
         <div className="form-section">
+
           <h3>Personal Information</h3>
 
           <div className="form-grid">
 
             <div className="form-group">
+
               <label>
                 Student Name <span>*</span>
               </label>
@@ -182,9 +193,12 @@ function AddStudent() {
                 value={formData.name}
                 onChange={handleChange}
               />
+
             </div>
 
+
             <div className="form-group">
+
               <label>
                 Student ID <span>*</span>
               </label>
@@ -196,9 +210,12 @@ function AddStudent() {
                 value={formData.id}
                 onChange={handleChange}
               />
+
             </div>
 
+
             <div className="form-group">
+
               <label>Email</label>
 
               <input
@@ -208,9 +225,12 @@ function AddStudent() {
                 value={formData.email}
                 onChange={handleChange}
               />
+
             </div>
 
+
             <div className="form-group">
+
               <label>Phone</label>
 
               <input
@@ -220,17 +240,26 @@ function AddStudent() {
                 value={formData.phone}
                 onChange={handleChange}
               />
+
             </div>
 
           </div>
+
         </div>
 
+
+        {/* Academic Information */}
+
         <div className="form-section">
+
           <h3>Academic Information</h3>
 
           <div className="form-grid">
 
+            {/* Department */}
+
             <div className="form-group">
+
               <label>
                 Department <span>*</span>
               </label>
@@ -240,33 +269,40 @@ function AddStudent() {
                 value={formData.department}
                 onChange={handleChange}
               >
+
                 <option value="">
                   Select department
                 </option>
 
-                <option value="Computer Science">
-                  Computer Science
+                <option value="CSE">
+                  CSE
                 </option>
 
-                <option value="Information Technology">
-                  Information Technology
+                <option value="ECE">
+                  ECE
                 </option>
 
-                <option value="Electronics">
-                  Electronics
+                <option value="EEE">
+                  EEE
                 </option>
 
-                <option value="Electrical Engineering">
-                  Electrical Engineering
+                <option value="AI & ML">
+                  AI & ML
                 </option>
 
-                <option value="Mechanical Engineering">
-                  Mechanical Engineering
+                <option value="MCA">
+                  MCA
                 </option>
+
               </select>
+
             </div>
 
+
+            {/* Semester */}
+
             <div className="form-group">
+
               <label>
                 Semester <span>*</span>
               </label>
@@ -276,6 +312,7 @@ function AddStudent() {
                 value={formData.semester}
                 onChange={handleChange}
               >
+
                 <option value="">
                   Select semester
                 </option>
@@ -288,11 +325,19 @@ function AddStudent() {
                 <option value="S6">S6</option>
                 <option value="S7">S7</option>
                 <option value="S8">S8</option>
+
               </select>
+
             </div>
 
+
+            {/* Batch */}
+
             <div className="form-group">
-              <label>Batch</label>
+
+              <label>
+                Batch <span>*</span>
+              </label>
 
               <input
                 type="text"
@@ -301,9 +346,33 @@ function AddStudent() {
                 value={formData.batch}
                 onChange={handleChange}
               />
+
             </div>
 
+
+            {/* Class */}
+
             <div className="form-group">
+
+              <label>
+                Class <span>*</span>
+              </label>
+
+              <input
+                type="text"
+                name="className"
+                placeholder="e.g. A"
+                value={formData.className}
+                onChange={handleChange}
+              />
+
+            </div>
+
+
+            {/* CGPA */}
+
+            <div className="form-group">
+
               <label>
                 CGPA <span>*</span>
               </label>
@@ -318,9 +387,14 @@ function AddStudent() {
                 value={formData.cgpa}
                 onChange={handleChange}
               />
+
             </div>
 
+
+            {/* Attendance */}
+
             <div className="form-group">
+
               <label>
                 Attendance % <span>*</span>
               </label>
@@ -334,10 +408,17 @@ function AddStudent() {
                 value={formData.attendance}
                 onChange={handleChange}
               />
+
             </div>
 
+
+            {/* Backlogs */}
+
             <div className="form-group">
-              <label>Number of Backlogs</label>
+
+              <label>
+                Number of Backlogs
+              </label>
 
               <input
                 type="number"
@@ -347,24 +428,38 @@ function AddStudent() {
                 value={formData.backlogs}
                 onChange={handleChange}
               />
+
             </div>
 
           </div>
+
         </div>
 
+
+        {/* Information Box */}
+
         <div className="form-info-box">
+
           <i className="bi bi-info-circle"></i>
 
           <div>
-            <strong>Prototype Risk Calculation</strong>
+
+            <strong>
+              Prototype Risk Calculation
+            </strong>
 
             <p>
               The current prototype calculates a temporary risk
               score using attendance, CGPA, and backlogs.
               This will later be replaced by the Beacon ML model.
             </p>
+
           </div>
+
         </div>
+
+
+        {/* Form Actions */}
 
         <div className="form-actions">
 
