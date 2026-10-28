@@ -1,3 +1,4 @@
+
 .student-details-page {
   padding: 32px;
   min-height: 100%;
@@ -69,23 +70,6 @@
   font-size: 14px;
 }
 
-.intervention-button {
-  border: none;
-  border-radius: 9px;
-  padding: 12px 18px;
-  background: #278f96;
-  color: white;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.intervention-button:hover {
-  background: #20777d;
-}
-
 /* Main layout */
 
 .student-details-grid {
@@ -104,7 +88,7 @@
 /* Cards */
 
 .details-card {
-  background: white;
+  background: #ffffff;
   border: 1px solid #e4e9ef;
   border-radius: 14px;
   padding: 24px;
@@ -133,7 +117,7 @@
   line-height: 1.6;
 }
 
-/* Risk */
+/* Risk category */
 
 .risk-badge {
   padding: 7px 12px;
@@ -251,12 +235,12 @@
   height: 18px;
   border-radius: 50%;
   background: #172b45;
-  border: 3px solid white;
+  border: 3px solid #ffffff;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
   transform: translateX(-50%);
 }
 
-/* Academic stats */
+/* Academic statistics */
 
 .academic-stats {
   display: grid;
@@ -281,6 +265,7 @@
   align-items: center;
   justify-content: center;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 .stat-icon.blue {
@@ -310,7 +295,7 @@
   font-size: 20px;
 }
 
-/* SHAP */
+/* SHAP explanation */
 
 .shap-heading {
   margin-bottom: 26px;
@@ -433,9 +418,10 @@
   color: #278f96;
   font-size: 14px;
   margin-top: 1px;
+  flex-shrink: 0;
 }
 
-/* Profile */
+/* Student profile */
 
 .profile-details {
   display: flex;
@@ -468,173 +454,6 @@
   color: #263a52;
   font-size: 12px;
   text-align: right;
-}
-
-/* Action card */
-
-.action-card {
-  background: #f0f8f8;
-  border-color: #d8eded;
-}
-
-.action-icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 11px;
-  background: #d8eeee;
-  color: #278f96;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
-}
-
-.action-card h2 {
-  color: #172b45;
-  font-size: 17px;
-  margin: 0 0 8px;
-}
-
-.action-card p {
-  color: #6f8093;
-  font-size: 13px;
-  line-height: 1.7;
-  margin-bottom: 18px;
-}
-
-.action-button {
-  width: 100%;
-  border: none;
-  border-radius: 8px;
-  padding: 11px;
-  background: #278f96;
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.action-button:hover {
-  background: #20777d;
-}
-
-/* Modal */
-
-.modal-backdrop-custom {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgba(20, 35, 53, 0.48);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.intervention-modal {
-  width: 100%;
-  max-width: 520px;
-  background: white;
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-}
-
-.modal-header-custom {
-  padding: 22px 24px;
-  border-bottom: 1px solid #edf0f4;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.modal-header-custom h2 {
-  color: #172b45;
-  font-size: 19px;
-  margin: 0;
-}
-
-.close-modal {
-  border: none;
-  background: #f4f6f8;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  color: #69798d;
-  cursor: pointer;
-}
-
-.modal-body-custom {
-  padding: 24px;
-}
-
-.modal-body-custom label {
-  display: block;
-  color: #43566e;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 7px;
-  margin-top: 16px;
-}
-
-.modal-body-custom label:first-child {
-  margin-top: 0;
-}
-
-.modal-body-custom select,
-.modal-body-custom textarea {
-  width: 100%;
-  border: 1px solid #dce2e8;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #34475e;
-  font-size: 13px;
-  outline: none;
-}
-
-.modal-body-custom select:focus,
-.modal-body-custom textarea:focus {
-  border-color: #278f96;
-  box-shadow: 0 0 0 3px rgba(39, 143, 150, 0.1);
-}
-
-.modal-body-custom textarea {
-  resize: vertical;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 22px;
-}
-
-.cancel-button,
-.save-button {
-  border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.cancel-button {
-  background: #f1f3f5;
-  color: #52647a;
-}
-
-.save-button {
-  background: #278f96;
-  color: white;
-}
-
-.save-button:hover {
-  background: #20777d;
 }
 
 /* Responsive */
@@ -682,5 +501,9 @@
 
   .student-side-column {
     display: flex;
+  }
+
+  .details-card {
+    padding: 18px;
   }
 }

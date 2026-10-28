@@ -1,13 +1,10 @@
-import { useState } from 'react'
+
 import { Link, useParams } from 'react-router-dom'
 import './StudentDetails.css'
 
 function StudentDetails() {
   const { studentId } = useParams()
 
-  const [showIntervention, setShowIntervention] = useState(false)
-
-  // Default dummy students
   const defaultStudents = [
     {
       id: 'BCN2026001',
@@ -81,101 +78,92 @@ function StudentDetails() {
     },
   ]
 
-  // Students added through the Add Student form
-  const storedStudents =
-    JSON.parse(localStorage.getItem('beaconStudents')) || []
+  let storedStudents = []
 
-  // Normalize the data so both dummy and added students
-  // use the same field names.
+  try {
+    storedStudents = JSON.parse(
+      localStorage.getItem('beaconStudents') || '[]'
+    )
+    if (!Array.isArray(storedStudents)) storedStudents = []
+  } catch {
+    storedStudents = []
+  }
+
   const normalizedStoredStudents = storedStudents.map((student) => ({
     ...student,
     riskScore: student.riskScore ?? student.risk,
-    riskLevel: student.riskCategory ?? student.category,
+    riskLevel:
+      student.riskLevel ?? student.riskCategory ?? student.category,
   }))
 
-  // Combine default students and newly added students
+  // Stored students take precedence over demo students with the same ID.
   const allStudents = [
-    ...defaultStudents,
+    ...defaultStudents.filter(
+      (demo) =>
+        !normalizedStoredStudents.some(
+          (saved) => String(saved.id) === String(demo.id)
+        )
+    ),
     ...normalizedStoredStudents,
   ]
 
-  // Find the student selected from the URL
   const student = allStudents.find(
-    (item) => item.id === studentId
+    (item) => String(item.id) === String(studentId)
   )
 
-  // If the ID is invalid, show a proper message
-  // instead of displaying Rahul's profile.
   if (!student) {
     return (
       <div className="student-details-page">
         <div className="student-page-header">
-          <div>
-            <Link to="/students" className="back-link">
-              <i className="bi bi-arrow-left"></i>
-              Back to Students
-            </Link>
-
-            <div className="student-title-row">
-              <div>
-                <div className="page-eyebrow">
-                  STUDENT PROFILE
-                </div>
-
-                <h1>Student Not Found</h1>
-
-                <p>
-                  No student was found with ID: {studentId}
-                </p>
-              </div>
-            </div>
-          </div>
+          <Link to="/students" className="back-link">
+            <i className="bi bi-arrow-left"></i> Back to Students
+          </Link>
+          <div className="page-eyebrow">STUDENT PROFILE</div>
+          <h1>Student Not Found</h1>
+          <p>No student was found with ID: {studentId}</p>
         </div>
       </div>
     )
   }
 
-  // Temporary SHAP-style explanation data
+  const score = Number(student.riskScore ?? 0)
+  const cgpa = Number(student.cgpa ?? 0)
+  const attendance = Number(student.attendance ?? 0)
+  const backlogs = Number(student.backlogs ?? 0)
+
+  const riskClass =
+    score >= 60 ? 'high' : score >= 30 ? 'medium' : 'low'
+
   const riskFactors = [
     {
       name: 'Attendance',
-      value: `${student.attendance}%`,
-      impact: student.attendance < 70 ? 0.31 : 0.12,
-      type: 'risk',
+      value: `${attendance}%`,
+      impact: attendance < 70 ? 0.31 : attendance < 80 ? 0.12 : 0.04,
       description:
-        'Low attendance is strongly associated with increased dropout risk.',
+        attendance < 70
+          ? 'Low attendance is a factor to review.'
+          : 'Attendance is relatively higher.',
+      type: attendance < 80 ? 'risk' : 'protective',
     },
     {
       name: 'Backlogs',
-      value: `${student.backlogs}`,
-      impact: student.backlogs > 0 ? 0.24 : 0.04,
-      type: 'risk',
+      value: backlogs,
+      impact: backlogs > 2 ? 0.24 : backlogs > 0 ? 0.12 : -0.04,
       description:
-        'Multiple pending courses increase the predicted risk.',
+        backlogs > 0
+          ? 'Pending courses may require academic review.'
+          : 'No pending backlogs are recorded.',
+      type: backlogs > 0 ? 'risk' : 'protective',
     },
     {
       name: 'CGPA',
-      value: `${student.cgpa}`,
-      impact: student.cgpa < 6.5 ? 0.19 : 0.06,
-      type: 'risk',
+      value: cgpa.toFixed(1),
+      impact: cgpa < 6.5 ? 0.19 : cgpa < 7.5 ? 0.08 : -0.06,
       description:
-        'The current CGPA is below the preferred academic range.',
-    },
-    {
-      name: 'Recent Attendance Trend',
-      value: student.attendance >= 75 ? '+6%' : '+2%',
-      impact: -0.12,
-      type: 'protective',
-      description:
-        'Improving attendance is contributing positively to the prediction.',
-    },
-    {
-      name: 'Recent Academic Activity',
-      value: 'Active',
-      impact: -0.08,
-      type: 'protective',
-      description:
-        'Recent academic activity is acting as a protective factor.',
+        cgpa < 6.5
+          ? 'Academic performance may require review.'
+          : 'The recorded CGPA is relatively higher.',
+      type: cgpa < 7.5 ? 'risk' : 'protective',
     },
   ]
 
@@ -187,129 +175,103 @@ function StudentDetails() {
     (factor) => factor.type === 'protective'
   )
 
-  const getRiskClass = () => {
-    if (student.riskScore >= 60) return 'high'
-    if (student.riskScore >= 30) return 'medium'
-    return 'low'
-  }
-
-  const riskClass = getRiskClass()
-
-  // Generate initials automatically
   const initials = student.name
     .split(' ')
     .map((word) => word[0])
     .join('')
     .substring(0, 2)
 
-  return (
-    <div className="student-details-page">
-
-      {/* Page Header */}
-      <div className="student-page-header">
-
-        <div>
-
-          <Link to="/students" className="back-link">
-            <i className="bi bi-arrow-left"></i>
-            Back to Students
-          </Link>
-
-          <div className="student-title-row">
-
-            <div className="student-avatar-large">
-              {initials}
-            </div>
-
-            <div>
-
-              <div className="page-eyebrow">
-                STUDENT PROFILE
-              </div>
-
-              <h1>{student.name}</h1>
-
-              <p>
-                {student.id} · {student.department}
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <button
-          className="intervention-button"
-          onClick={() => setShowIntervention(true)}
-        >
-          <i className="bi bi-plus-circle"></i>
-          Record Intervention
-        </button>
-
+  const renderFactor = (factor) => (
+    <div className="factor-row" key={factor.name}>
+      <div className="factor-info">
+        <div className="factor-name">{factor.name}</div>
+        <div className="factor-description">{factor.description}</div>
       </div>
 
-      {/* Main Grid */}
+      <div className="factor-value">{factor.value}</div>
+
+      <div className="factor-bar-container">
+        <div
+          className={`factor-bar ${
+            factor.type === 'risk'
+              ? 'risk-factor-bar'
+              : 'protective-factor-bar'
+          }`}
+          style={{
+            width: `${Math.min(100, Math.abs(factor.impact) * 250)}%`,
+          }}
+        />
+      </div>
+
+      <div
+        className={`factor-impact ${
+          factor.type === 'risk'
+            ? 'risk-impact'
+            : 'protective-impact'
+        }`}
+      >
+        {factor.impact > 0 ? '+' : ''}
+        {factor.impact.toFixed(2)}
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="student-details-page">
+      {/* Header */}
+      <div className="student-page-header">
+        <Link to="/students" className="back-link">
+          <i className="bi bi-arrow-left"></i> Back to Students
+        </Link>
+
+        <div className="student-title-row">
+          <div className="student-avatar-large">{initials}</div>
+
+          <div>
+            <div className="page-eyebrow">STUDENT PROFILE</div>
+            <h1>{student.name}</h1>
+            <p>
+              {student.id} · {student.department}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="student-details-grid">
-
-        {/* Left Column */}
         <div className="student-main-column">
-
-          {/* Risk Card */}
+          {/* Risk assessment */}
           <section className="details-card risk-card">
-
             <div className="card-heading">
-
               <div>
-
-                <div className="card-eyebrow">
-                  DROPOUT RISK
-                </div>
-
-                <h2>
-                  Current Risk Assessment
-                </h2>
-
+                <div className="card-eyebrow">DROPOUT RISK</div>
+                <h2>Current Risk Assessment</h2>
               </div>
 
               <span className={`risk-badge ${riskClass}`}>
-                {student.riskLevel} Risk
+                {riskClass.charAt(0).toUpperCase() + riskClass.slice(1)} Risk
               </span>
-
             </div>
 
             <div className="risk-assessment">
-
               <div className="risk-score-circle">
-
-                <div className="risk-score-number">
-                  {student.riskScore}%
-                </div>
-
-                <div className="risk-score-label">
-                  Risk Score
-                </div>
-
+                <div className="risk-score-number">{score}%</div>
+                <div className="risk-score-label">Risk Score</div>
               </div>
 
               <div className="risk-assessment-text">
-
                 <h3>
-                  {student.riskLevel === 'High'
-                    ? 'Immediate attention recommended'
-                    : student.riskLevel === 'Medium'
+                  {riskClass === 'high'
+                    ? 'High dropout risk identified'
+                    : riskClass === 'medium'
                       ? 'Continued monitoring recommended'
                       : 'Student currently appears stable'}
                 </h3>
 
                 <p>
-                  The model currently estimates a{' '}
-                  <strong>{student.riskScore}%</strong> dropout risk
-                  for this student.
+                  Recorded risk score: <strong>{score}%</strong>
                 </p>
 
                 <div className="risk-scale">
-
                   <div className="scale-labels">
                     <span>Low</span>
                     <span>Medium</span>
@@ -317,7 +279,6 @@ function StudentDetails() {
                   </div>
 
                   <div className="risk-scale-bar">
-
                     <div className="low-zone"></div>
                     <div className="medium-zone"></div>
                     <div className="high-zone"></div>
@@ -325,264 +286,126 @@ function StudentDetails() {
                     <div
                       className="risk-marker"
                       style={{
-                        left: `${student.riskScore}%`,
+                        left: `${Math.min(100, Math.max(0, score))}%`,
                       }}
-                    ></div>
-
+                    />
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           </section>
 
-          {/* Academic Information */}
+          {/* Academic information */}
           <section className="details-card">
-
             <div className="card-heading">
-
               <div>
-
-                <div className="card-eyebrow">
-                  ACADEMIC INFORMATION
-                </div>
-
-                <h2>
-                  Student Performance
-                </h2>
-
+                <div className="card-eyebrow">ACADEMIC INFORMATION</div>
+                <h2>Student Performance</h2>
               </div>
-
             </div>
 
             <div className="academic-stats">
-
               <div className="academic-stat">
-
                 <div className="stat-icon blue">
                   <i className="bi bi-mortarboard"></i>
                 </div>
-
                 <div>
                   <span>CGPA</span>
-                  <strong>{student.cgpa}</strong>
+                  <strong>{student.cgpa ?? 'N/A'}</strong>
                 </div>
-
               </div>
 
               <div className="academic-stat">
-
                 <div className="stat-icon teal">
                   <i className="bi bi-calendar-check"></i>
                 </div>
-
                 <div>
                   <span>Attendance</span>
-                  <strong>{student.attendance}%</strong>
+                  <strong>
+                    {student.attendance ?? 'N/A'}
+                    {student.attendance != null ? '%' : ''}
+                  </strong>
                 </div>
-
               </div>
 
               <div className="academic-stat">
-
                 <div className="stat-icon red">
                   <i className="bi bi-exclamation-triangle"></i>
                 </div>
-
                 <div>
                   <span>Backlogs</span>
-                  <strong>{student.backlogs}</strong>
+                  <strong>{student.backlogs ?? 'N/A'}</strong>
                 </div>
-
               </div>
-
             </div>
-
           </section>
 
-          {/* SHAP Explanation */}
+          {/* Risk explanation */}
           <section className="details-card">
-
             <div className="card-heading shap-heading">
-
               <div>
-
-                <div className="card-eyebrow">
-                  MODEL EXPLANATION
-                </div>
-
-                <h2>
-                  Why is this student at risk?
-                </h2>
-
+                <div className="card-eyebrow">MODEL EXPLANATION</div>
+                <h2>Why is this student at risk?</h2>
                 <p className="card-description">
-                  The following factors explain the main contributors
-                  to the current risk prediction.
+                  Main academic indicators associated with this student's
+                  demo risk profile.
                 </p>
-
               </div>
 
               <div className="shap-label">
-                <i className="bi bi-stars"></i>
-                SHAP Explanation
+                <i className="bi bi-stars"></i> SHAP Explanation
               </div>
-
             </div>
 
-            {/* Risk Increasing Factors */}
-            <div className="factor-section">
-
-              <h3 className="factor-title risk-title">
-
-                <i className="bi bi-arrow-up-circle"></i>
-
-                Risk-increasing factors
-
-              </h3>
-
-              {riskFactorsOnly.map((factor) => (
-
-                <div
-                  className="factor-row"
-                  key={factor.name}
-                >
-
-                  <div className="factor-info">
-
-                    <div className="factor-name">
-                      {factor.name}
-                    </div>
-
-                    <div className="factor-description">
-                      {factor.description}
-                    </div>
-
-                  </div>
-
-                  <div className="factor-value">
-                    {factor.value}
-                  </div>
-
-                  <div className="factor-bar-container">
-
-                    <div
-                      className="factor-bar risk-factor-bar"
-                      style={{
-                        width: `${Math.abs(factor.impact) * 250}%`,
-                      }}
-                    ></div>
-
-                  </div>
-
-                  <div className="factor-impact risk-impact">
-                    +{factor.impact.toFixed(2)}
-                  </div>
-
-                </div>
-
-              ))}
-
+            <div className="demo-explanation-notice">
+              <i className="bi bi-info-circle"></i>
+              <span>
+               
+              </span>
             </div>
 
-            {/* Protective Factors */}
-            <div className="factor-section protective-section">
+            {riskFactorsOnly.length > 0 && (
+              <div className="factor-section">
+                <h3 className="factor-title risk-title">
+                  <i className="bi bi-arrow-up-circle"></i>
+                  Risk factors
+                </h3>
 
-              <h3 className="factor-title protective-title">
+                {riskFactorsOnly.map(renderFactor)}
+              </div>
+            )}
 
-                <i className="bi bi-shield-check"></i>
+            {protectiveFactors.length > 0 && (
+              <div className="factor-section protective-section">
+                <h3 className="factor-title protective-title">
+                  <i className="bi bi-shield-check"></i>
+                  Protective factors
+                </h3>
 
-                Protective factors
-
-              </h3>
-
-              {protectiveFactors.map((factor) => (
-
-                <div
-                  className="factor-row"
-                  key={factor.name}
-                >
-
-                  <div className="factor-info">
-
-                    <div className="factor-name">
-                      {factor.name}
-                    </div>
-
-                    <div className="factor-description">
-                      {factor.description}
-                    </div>
-
-                  </div>
-
-                  <div className="factor-value">
-                    {factor.value}
-                  </div>
-
-                  <div className="factor-bar-container">
-
-                    <div
-                      className="factor-bar protective-factor-bar"
-                      style={{
-                        width: `${Math.abs(factor.impact) * 250}%`,
-                      }}
-                    ></div>
-
-                  </div>
-
-                  <div className="factor-impact protective-impact">
-                    {factor.impact.toFixed(2)}
-                  </div>
-
-                </div>
-
-              ))}
-
-            </div>
+                {protectiveFactors.map(renderFactor)}
+              </div>
+            )}
 
             <div className="shap-note">
 
-              <i className="bi bi-info-circle"></i>
-
               <span>
-                SHAP values indicate how individual features contribute
-                to the model prediction. Positive values increase
-                predicted risk, while negative values act as protective
-                factors.
+     
               </span>
-
             </div>
-
           </section>
-
         </div>
 
-        {/* Right Column */}
+        {/* Student information */}
         <aside className="student-side-column">
-
-          {/* Student Information */}
           <section className="details-card">
-
             <div className="card-heading">
-
               <div>
-
-                <div className="card-eyebrow">
-                  PROFILE
-                </div>
-
-                <h2>
-                  Student Information
-                </h2>
-
+                <div className="card-eyebrow">PROFILE</div>
+                <h2>Student Information</h2>
               </div>
-
             </div>
 
             <div className="profile-details">
-
               <div className="profile-detail">
                 <span>Student ID</span>
                 <strong>{student.id}</strong>
@@ -595,145 +418,27 @@ function StudentDetails() {
 
               <div className="profile-detail">
                 <span>Semester</span>
-                <strong>{student.semester}</strong>
+                <strong>{student.semester || 'N/A'}</strong>
               </div>
 
               <div className="profile-detail">
                 <span>Batch</span>
-                <strong>{student.batch}</strong>
+                <strong>{student.batch || 'N/A'}</strong>
               </div>
 
               <div className="profile-detail">
                 <span>Email</span>
-                <strong>{student.email}</strong>
+                <strong>{student.email || 'N/A'}</strong>
               </div>
 
               <div className="profile-detail">
                 <span>Phone</span>
-                <strong>{student.phone}</strong>
+                <strong>{student.phone || 'N/A'}</strong>
               </div>
-
             </div>
-
           </section>
-
-          {/* Recommended Action */}
-          <section className="details-card action-card">
-
-            <div className="action-icon">
-              <i className="bi bi-person-check"></i>
-            </div>
-
-            <h2>
-              Recommended Action
-            </h2>
-
-            <p>
-              Consider contacting the student to discuss attendance,
-              academic performance and possible support requirements.
-            </p>
-
-            <button
-              className="action-button"
-              onClick={() => setShowIntervention(true)}
-            >
-              Record Intervention
-              <i className="bi bi-arrow-right"></i>
-            </button>
-
-          </section>
-
         </aside>
-
       </div>
-
-      {/* Intervention Modal */}
-      {showIntervention && (
-
-        <div
-          className="modal-backdrop-custom"
-          onClick={() => setShowIntervention(false)}
-        >
-
-          <div
-            className="intervention-modal"
-            onClick={(event) => event.stopPropagation()}
-          >
-
-            <div className="modal-header-custom">
-
-              <div>
-
-                <div className="card-eyebrow">
-                  INTERVENTION
-                </div>
-
-                <h2>
-                  Record Student Intervention
-                </h2>
-
-              </div>
-
-              <button
-                className="close-modal"
-                onClick={() => setShowIntervention(false)}
-              >
-                <i className="bi bi-x-lg"></i>
-              </button>
-
-            </div>
-
-            <div className="modal-body-custom">
-
-              <label>
-                Intervention Type
-              </label>
-
-              <select>
-                <option>Academic Counselling</option>
-                <option>Attendance Follow-up</option>
-                <option>Parent/Guardian Contact</option>
-                <option>Mentoring</option>
-                <option>Financial Support Referral</option>
-                <option>Other</option>
-              </select>
-
-              <label>
-                Notes
-              </label>
-
-              <textarea
-                rows="5"
-                placeholder="Enter details about the intervention..."
-              ></textarea>
-
-              <div className="modal-actions">
-
-                <button
-                  className="cancel-button"
-                  onClick={() => setShowIntervention(false)}
-                >
-                  Cancel
-                </button>
-
-                <button
-                  className="save-button"
-                  onClick={() => setShowIntervention(false)}
-                >
-                  <i className="bi bi-check-lg"></i>
-                  Save Intervention
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
     </div>
   )
 }

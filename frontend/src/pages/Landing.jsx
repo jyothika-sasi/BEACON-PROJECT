@@ -16,9 +16,7 @@ function Landing() {
       {/* Content */}
       <div className="landing-content">
 
-        <p className="college-name">
-          COLLEGE OF ENGINEERING CHENGANNUR
-        </p>
+        
 
         <div className="divider"></div>
 

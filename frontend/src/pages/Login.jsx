@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
@@ -10,95 +11,79 @@ function Login() {
   const [role, setRole] = useState('Administrator')
   const [error, setError] = useState('')
 
-const handleLogin = (e) => {
-  e.preventDefault()
+  const handleLogin = (e) => {
+    e.preventDefault()
+    setError('')
 
-  setError('')
+    const trimmedEmail = email.trim()
 
-  if (!email || !password) {
-    setError('Please enter your email and password.')
-    return
-  }
+    if (!trimmedEmail || !password) {
+      setError('Please enter your email and password.')
+      return
+    }
 
-  const user = {
-    name: email.split('@')[0],
-    email: email,
-    role: role,
-  }
+    const user = {
+      name: trimmedEmail.split('@')[0],
+      email: trimmedEmail,
+      role: role,
+    }
 
-  localStorage.setItem('beaconUser', JSON.stringify(user))
+    localStorage.setItem('beaconUser', JSON.stringify(user))
 
-  if (role === 'Administrator') {
-    navigate('/dashboard')
-  } else if (role === 'Faculty Advisor') {
-    navigate('/dashboard')
-  } else if (role === 'Department Coordinator') {
     navigate('/dashboard')
   }
-}
 
   return (
     <div className="login-page">
-
-      {/* Left side - College image */}
-      <div className="login-image">
-        <div className="login-image-overlay">
-          <p>COLLEGE OF ENGINEERING CHENGANNUR</p>
-
-          <h1>BEACON</h1>
-
-          <h2>
-            AI-Powered Early Warning System
-            <br />
-            for Student Dropout Prediction
-          </h2>
-        </div>
-      </div>
-
-      {/* Right side - Login */}
       <div className="login-container">
-
         <div className="login-box">
 
+          {/* Login Heading */}
           <div className="login-heading">
-            <p>WELCOME BACK</p>
+            <p>BEACON SYSTEM</p>
 
-            <h1>Login</h1>
+            <h1>Welcome Back</h1>
 
             <span>
               Sign in to access the BEACON system
             </span>
           </div>
 
+          {/* Login Form */}
           <form onSubmit={handleLogin}>
 
             {/* Email */}
             <div className="input-group">
-              <label>Email</label>
+              <label htmlFor="email">Email</label>
 
               <input
+                id="email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
+                required
               />
             </div>
 
             {/* Password */}
             <div className="input-group">
-              <label>Password</label>
+              <label htmlFor="password">Password</label>
 
               <input
+                id="password"
                 type="password"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
               />
             </div>
 
-            {/* Role */}
+            {/* Role Selection */}
             <div className="role-section">
-
               <label>Login as</label>
 
               <div className="role-options">
@@ -111,9 +96,9 @@ const handleLogin = (e) => {
                       : 'role-card'
                   }
                   onClick={() => setRole('Administrator')}
+                  aria-pressed={role === 'Administrator'}
                 >
                   <strong>Administrator</strong>
-
                 </button>
 
                 <button
@@ -124,9 +109,9 @@ const handleLogin = (e) => {
                       : 'role-card'
                   }
                   onClick={() => setRole('Faculty Advisor')}
+                  aria-pressed={role === 'Faculty Advisor'}
                 >
                   <strong>Faculty Advisor</strong>
-
                 </button>
 
                 <button
@@ -139,37 +124,33 @@ const handleLogin = (e) => {
                   onClick={() =>
                     setRole('Department Coordinator')
                   }
+                  aria-pressed={role === 'Department Coordinator'}
                 >
                   <strong>Department Coordinator</strong>
-
                 </button>
 
               </div>
-
             </div>
 
-            {/* Error */}
+            {/* Error Message */}
             {error && (
-              <p className="login-error">
+              <p className="login-error" role="alert">
                 {error}
               </p>
             )}
 
-            {/* Login button */}
+            {/* Submit */}
             <button
               type="submit"
               className="login-submit"
             >
               LOGIN
-              <span>→</span>
+              <span aria-hidden="true">→</span>
             </button>
 
           </form>
-
         </div>
-
       </div>
-
     </div>
   )
 }
